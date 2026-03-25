@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>Nouvelle R - Tracker</title>
+<meta name="theme-color" content="#0a0a0a"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+<meta name="apple-mobile-web-app-title" content="Nouvelle R"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:#0a0a0a;color:#fff;font-family:"Montserrat","Segoe UI",sans-serif;max-width:480px;margin:0 auto;padding-bottom:60px}
+input,textarea,button{font-family:inherit}
+.page{display:none}.page.active{display:block}
+.banner{background:#000;padding:26px 20px 14px;text-align:center;border-bottom:1px solid #1a1a1a}
+.logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:0}
+.logo-chev{color:#e8960a;font-size:26px;font-weight:900;font-style:italic;line-height:1}
+.logo-nouvelle{color:#fff;font-size:26px;font-weight:900;letter-spacing:5px;text-transform:uppercase}
+.logo-r{color:#e8960a;font-size:30px;font-weight:900}
+.logo-svg{display:block;margin:3px auto 6px}
+.sub{color:#444;font-size:9px;letter-spacing:3px;text-transform:uppercase}
+.name-input{margin-top:10px;display:flex;justify-content:center}
+.name-input input{background:#111;border:1px solid rgba(232,150,10,0.4);border-radius:8px;color:#fff;padding:8px 16px;font-size:14px;text-align:center;outline:none;width:230px}
+.wrap{padding:18px 14px}
+.streak{background:linear-gradient(135deg,#140a00,#0c0c0c);border:1px solid rgba(232,150,10,0.25);border-radius:12px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.tabs{display:flex;gap:4px;margin-bottom:16px;background:#111;border-radius:10px;padding:4px;border:1px solid #1e1e1e}
+.tab{flex:1;padding:9px 4px;border-radius:8px;border:none;cursor:pointer;font-weight:700;font-size:12px;transition:all 0.2s;background:transparent;color:#555;letter-spacing:1px}
+.tab.on{background:#e8960a;color:#000}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.card{background:#111;border-radius:12px;padding:16px 10px;border:1px solid #1e1e1e;text-align:center}
+.card-lbl{font-size:9px;color:#555;text-transform:uppercase;letter-spacing:2px;margin-bottom:6px}
+.card-val{font-size:36px;font-weight:900;line-height:1}
+.piliers{background:#111;border-radius:12px;padding:16px;margin-bottom:16px;border:1px solid #1e1e1e}
+.sec-title{font-size:9px;color:#444;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px}
+.bar-row{margin-bottom:12px}
+.bar-lbl{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;color:#888}
+.bar-bg{background:#1a1a1a;border-radius:99px;height:5px}
+.bar-fill{height:5px;border-radius:99px;transition:width 0.4s}
+.chart-box{background:#111;border-radius:12px;padding:14px 14px 10px;margin-bottom:16px;border:1px solid #1e1e1e}
+.cat-hd{display:flex;align-items:center;gap:8px;margin-bottom:10px;margin-top:20px}
+.cat-bar{width:3px;height:16px;border-radius:2px}
+.hrow{display:flex;align-items:center;gap:12px;padding:12px 14px;margin-bottom:6px;background:#111;border-radius:10px;border:1px solid #1e1e1e;cursor:pointer;transition:all 0.2s}
+.hrow-chk{width:22px;height:22px;border-radius:6px;border:2px solid #2a2a2a;background:transparent;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s}
+.bonus{font-size:9px;color:#e8960a;font-weight:700;border:1px solid rgba(232,150,10,0.3);border-radius:4px;padding:2px 5px}
+.bonus-indent{padding-left:16px;margin-top:4px}
+.note-box{background:#111;border-radius:12px;padding:14px;margin-bottom:12px;border:1px solid #1e1e1e;margin-top:20px}
+.note-box textarea{width:100%;background:#0f0f0f;border:1px solid #1e1e1e;border-radius:8px;color:#fff;padding:10px 12px;font-size:13px;resize:none;outline:none;line-height:1.5}
+/* Bouton sync rapide */
+.btn-sync-now{width:100%;padding:14px;border-radius:12px;border:none;background:#e8960a;color:#000;font-weight:900;font-size:14px;cursor:pointer;letter-spacing:1px;margin-top:4px;text-transform:uppercase}
+.btn-sync-now:active{opacity:0.8}
+.btn-gold{width:100%;padding:13px;border-radius:12px;border:1px solid rgba(232,150,10,0.3);background:transparent;color:#e8960a;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:1px;margin-top:8px;text-transform:uppercase}
+.sync{text-align:center;font-size:11px;margin-top:8px;padding:8px;border-radius:8px;display:none;font-weight:700}
+.sync.ok{color:#22c55e;background:rgba(34,197,94,0.1)}
+.sync.err{color:#ef4444;background:rgba(239,68,68,0.1)}
+.sync.pend{color:#e8960a;background:rgba(232,150,10,0.1)}
+.month-wrap{padding:20px 14px}
+.month-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;background:#111;border-radius:10px;padding:10px 16px;border:1px solid #1e1e1e}
+.month-nav button{background:transparent;border:none;color:#e8960a;cursor:pointer;font-size:22px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-lbl{text-align:center;font-size:9px;color:#555;padding:4px 0;font-weight:700}
+.cal-day{aspect-ratio:1;border-radius:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1.5px solid #1e1e1e;position:relative}
+.cal-day.tap{cursor:pointer}
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;justify-content:center}
+.leg-item{display:flex;align-items:center;gap:4px;font-size:9px;color:#555}
+.leg-dot{width:8px;height:8px;border-radius:3px}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;display:none;align-items:flex-end;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:#141414;border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;padding:20px 18px 40px;border:1px solid #1e1e1e}
+.modal-handle{width:36px;height:4px;background:#1e1e1e;border-radius:99px;margin:0 auto 20px}
+.back-btn{background:transparent;border:1px solid #1e1e1e;color:#e8960a;border-radius:8px;padding:8px 14px;cursor:pointer;font-size:13px}
+</style>
+</head>
+<body>
+
+<!-- PAGE MAIN -->
+<div id="pg-main" class="page active">
+  <div class="banner">
+    <div class="logo">
+      <span class="logo-chev">&#171;</span>
+      <span class="logo-nouvelle">NOUVELLE</span>
+      <span class="logo-r">R</span>
+      <span class="logo-chev">&#187;</span>
+    </div>
+    <svg class="logo-svg" viewBox="0 0 260 26" width="200" height="26">
+      <path d="M18 20 Q60 5 105 17 Q148 28 185 11 Q212 2 242 13" stroke="#e8960a" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <path d="M28 23 Q85 29 135 21 Q175 14 225 19" stroke="#e8960a" stroke-width="0.8" fill="none" stroke-linecap="round" opacity="0.4"/>
+    </svg>
+    <div class="sub">Tracker &middot; Remi Coach Calisthenie</div>
+    <div class="name-input">
+      <input type="text" id="inp-name" placeholder="Prenom NOM de l'athlete"/>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div id="streak-box" class="streak" style="display:none">
+      <span style="font-size:28px">&#128293;</span>
+      <div>
+        <div id="streak-val" style="font-size:20px;font-weight:900;color:#e8960a;line-height:1"></div>
+        <div style="font-size:11px;color:#555;margin-top:2px">Serie en cours - ne la brise pas !</div>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tab on" data-p="day">Jour</button>
+      <button class="tab" data-p="week">Semaine</button>
+      <button class="tab" data-p="month">Mois</button>
+    </div>
+    <div class="cards">
+      <div class="card"><div class="card-lbl" id="c1l">Aujourd'hui</div><div class="card-val" id="c1v">0%</div></div>
+      <div class="card"><div class="card-lbl" id="c2l">Semaine</div><div class="card-val" id="c2v">0%</div></div>
+    </div>
+    <div class="piliers">
+      <div class="sec-title" id="pil-title">Piliers - Aujourd'hui</div>
+      <div id="pil-bars"></div>
+    </div>
+    <div class="chart-box">
+      <div class="sec-title">&#128200; Evolution - 7 derniers jours</div>
+      <svg id="chart-svg" viewBox="0 0 280 78" style="width:100%;overflow:visible"></svg>
+    </div>
+    <div id="habits-wrap"></div>
+    <div class="note-box">
+      <div class="sec-title">&#128172; Note du jour</div>
+      <textarea id="inp-note" rows="2" placeholder="Une phrase sur ta journee, ta seance, ton etat d'esprit..."></textarea>
+    </div>
+    <button class="btn-sync-now" id="btn-sync-now">&#9889; Enregistrer ma journee</button>
+    <div id="sync-el" class="sync"></div>
+    <button class="btn-gold" id="btn-month">&#128197; Visuel mensuel</button>
+  </div>
+</div>
+
+<!-- PAGE MOIS -->
+<div id="pg-month" class="page">
+  <div class="month-wrap">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <button class="back-btn" id="btn-back">&#8592; Retour</button>
+      <div style="text-align:center">
+        <div style="font-size:9px;color:#555;letter-spacing:2px;text-transform:uppercase">Nouvelle R</div>
+        <div style="font-size:14px;font-weight:700">Visuel Mensuel</div>
+      </div>
+      <div style="width:72px"></div>
+    </div>
+    <div class="month-nav">
+      <button id="btn-prev">&#8249;</button>
+      <span id="month-name" style="font-weight:700;font-size:14px;text-transform:capitalize"></span>
+      <button id="btn-next">&#8250;</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px">
+      <div class="card"><div class="card-lbl">Jours 100%</div><div class="card-val" id="m-ok" style="color:#22c55e;font-size:22px">0</div></div>
+      <div class="card"><div class="card-lbl">En cours</div><div class="card-val" id="m-part" style="color:#eab308;font-size:22px">0</div></div>
+      <div class="card"><div class="card-lbl">Moyenne</div><div class="card-val" id="m-avg" style="color:#e8960a;font-size:22px">0%</div></div>
+    </div>
+    <div style="background:#111;border-radius:12px;padding:12px;border:1px solid #1e1e1e">
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:6px" id="cal-hds"></div>
+      <div class="cal-grid" id="cal-grid"></div>
+    </div>
+    <div class="legend" id="cal-legend"></div>
+    <div style="margin-top:10px;text-align:center;font-size:10px;color:#555">Appuie sur un jour passe pour voir le detail</div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="modal-bg">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px">
+      <div>
+        <div id="m-date" style="font-size:12px;color:#555;text-transform:capitalize;margin-bottom:4px"></div>
+        <div id="m-score" style="font-size:34px;font-weight:900;line-height:1"></div>
+        <div id="m-rest" style="font-size:11px;color:#3b82f6;margin-top:4px"></div>
+      </div>
+      <button id="modal-close" style="background:#2a2a2a;border:none;color:#fff;border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:16px">&#10005;</button>
+    </div>
+    <div id="m-note-box" style="display:none;background:rgba(232,150,10,0.07);border:1px solid rgba(232,150,10,0.2);border-radius:10px;padding:10px 14px;margin-bottom:16px">
+      <div style="font-size:9px;color:#e8960a;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px">&#128172; Note</div>
+      <div id="m-note-txt" style="font-size:13px;color:#fff;line-height:1.6"></div>
+    </div>
+    <div id="m-habits"></div>
+  </div>
+</div>
+
+<script>
+var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxY_d0je2AiTYeVUYTR2Gph9uSteU3nuq208SxCfRPlJ3mcB54RoApBPHLYzW1aE8MdUw/exec";
+
+var HABITS = [
+  {id:"water",     cat:"nutrition", icon:"&#128167;", label:"2L d'eau minimum"},
+  {id:"protein",   cat:"nutrition", icon:"&#129370;", label:"Quota proteines atteint"},
+  {id:"meals",     cat:"nutrition", icon:"&#127869;", label:"Heures de repas regulieres"},
+  {id:"noProc",    cat:"nutrition", icon:"&#128683;", label:"Abstinence produits transformes"},
+  {id:"sleepTime", cat:"sommeil",   icon:"&#127769;", label:"Heure de coucher reguliere"},
+  {id:"noScreen",  cat:"sommeil",   icon:"&#128245;", label:"Ecrans coupes avant de dormir"},
+  {id:"wakeNat",   cat:"sommeil",   icon:"&#9728;",   label:"Reveil sans alarme"},
+  {id:"sleep7",    cat:"sommeil",   icon:"&#128564;", label:"7h de sommeil minimum"},
+  {id:"warmup",    cat:"train",     icon:"&#128293;", label:"Echauffement effectue"},
+  {id:"training",  cat:"train",     icon:"&#127947;", label:"Entrainement effectue"},
+  {id:"intensity", cat:"train",     icon:"&#9889;",   label:"Intensite et depassement de soi"},
+  {id:"satisfied", cat:"train",     icon:"&#11088;",  label:"Satisfait de ma seance (bonus)"},
+  {id:"visu",      cat:"mindset",   icon:"&#129504;", label:"Visualisation des objectifs"},
+  {id:"task",      cat:"mindset",   icon:"&#9989;",   label:"Une tache concrete effectuee"},
+  {id:"why",       cat:"mindset",   icon:"&#127919;", label:"Evoquer son Why"},
+  {id:"env",       cat:"mindset",   icon:"&#127807;", label:"Cultiver un environnement positif"}
+];
+
+var CATS = {
+  nutrition: {label:"Nutrition & Hydratation", color:"#e8960a"},
+  sommeil:   {label:"Sommeil",                 color:"#a78bfa"},
+  train:     {label:"Entrainement",            color:"#f97316"},
+  mindset:   {label:"Mindset",                 color:"#34d399"}
+};
+
+// Habitudes normales d'entrainement (hors bonus satisfied)
+var TRAIN_NORMAL = ["warmup","training","intensity"];
+
+var S = {checks:{}, notes:{}, athlete:""};
+try { var saved = localStorage.getItem("nr2"); if(saved) S = JSON.parse(saved); } catch(e) {}
+if(!S.checks)  S.checks  = {};
+if(!S.notes)   S.notes   = {};
+if(!S.athlete) S.athlete = "";
+
+var period = "day";
+var calY = new Date().getFullYear();
+var calM = new Date().getMonth();
+
+function pad(n) { return String(n).padStart(2,"0"); }
+function toKey(d) { return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+var TODAY = new Date();
+var TK = toKey(TODAY);
+function dim(y,m) { return new Date(y,m+1,0).getDate(); }
+function shiftKey(i) { var d = new Date(TODAY); d.setDate(TODAY.getDate()-i); return toKey(d); }
+function save() { localStorage.setItem("nr2", JSON.stringify(S)); }
+
+// --- CALCUL DU SCORE ---
+// Bloc entrainement selon mode repos :
+//   repos seul          = 0% sur train
+//   repos + 1 bonus     = 50% sur train
+//   repos + 2 bonus     = 100% sur train
+//   repos + 2 bonus + satisfied = 105% (bonus global)
+// Mode normal : calcul habituel sur toutes les habitudes
+function trainScore(dk) {
+  var isRest = !!S.checks["rest_"+dk];
+  if(isRest) {
+    var sc2 = S.checks["stretch_"+dk]  ? 1 : 0;
+    var wb  = S.checks["wellbeing_"+dk] ? 1 : 0;
+    var bonusCount = sc2 + wb;
+    if(bonusCount === 0) return 0;
+    if(bonusCount === 1) return 50;
+    return 100;
+  }
+  var done = TRAIN_NORMAL.filter(function(id) { return !!S.checks[id+"_"+dk]; }).length;
+  return Math.round((done / TRAIN_NORMAL.length) * 100);
+}
+
+function score(dk) {
+  var cats = ["nutrition","sommeil","train","mindset"];
+  var catScores = {
+    nutrition: catRawPct("nutrition", dk),
+    sommeil:   catRawPct("sommeil",   dk),
+    train:     trainScore(dk),
+    mindset:   catRawPct("mindset",   dk)
+  };
+  var total = (catScores.nutrition + catScores.sommeil + catScores.train + catScores.mindset) / 4;
+  var bon = S.checks["satisfied_"+dk] ? 1 : 0;
+  // bonus satisfied ne s'applique qu'en mode non-repos
+  var isRest = !!S.checks["rest_"+dk];
+  if(!isRest && bon) total = Math.min(total + (100 / (HABITS.filter(function(h){return h.id!=="satisfied";}).length)), 105);
+  return {pct: Math.round(Math.min(total, 105)), isRest: isRest};
+}
+
+function catRawPct(cat, dk) {
+  var hh = HABITS.filter(function(h) { return h.cat === cat && h.id !== "satisfied"; });
+  var done = hh.filter(function(h) { return !!S.checks[h.id+"_"+dk]; }).length;
+  return hh.length ? Math.round((done / hh.length) * 100) : 0;
+}
+
+function catPctForBar(cat, days) {
+  if(cat === "train") {
+    var total = days.reduce(function(a, dk) { return a + trainScore(dk); }, 0);
+    return Math.round(total / days.length);
+  }
+  var hh = HABITS.filter(function(h) { return h.cat === cat && h.id !== "satisfied"; });
+  var totalSlots = hh.length * days.length;
+  var done = hh.reduce(function(a,h) {
+    return a + days.filter(function(dk) { return !!S.checks[h.id+"_"+dk]; }).length;
+  }, 0);
+  return totalSlots ? Math.round((done / totalSlots) * 100) : 0;
+}
+
+function col(pct, isRest) {
+  if(isRest && pct === 0) return "#3b82f6";
+  if(pct >= 100) return "#22c55e";
+  if(pct >= 70)  return "#e8960a";
+  if(pct >= 40)  return "#eab308";
+  if(pct > 0)    return "#ef4444";
+  return "#2a2a2a";
+}
+function sc(p) { return p>=100?"#22c55e":p>=70?"#e8960a":p>=40?"#eab308":"#ef4444"; }
+
+function streak() {
+  var s = 0; var d = new Date(TODAY);
+  while(s < 365) {
+    var dk = toKey(d);
+    if(score(dk).pct > 0) { s++; d.setDate(d.getDate()-1); }
+    else break;
+  }
+  return s;
+}
+
+function render() {
+  var w7 = Array.from({length:7}, function(_,i) { return shiftKey(i); });
+  var todayPct = score(TK).pct;
+  var weekAvg  = Math.round(w7.reduce(function(a,dk) { return a+score(dk).pct; }, 0) / 7);
+  var dm0   = dim(TODAY.getFullYear(), TODAY.getMonth());
+  var mKeys = Array.from({length:dm0}, function(_,i) { return toKey(new Date(TODAY.getFullYear(), TODAY.getMonth(), i+1)); });
+  var monthAvg = Math.round(mKeys.reduce(function(a,dk) { return a+score(dk).pct; }, 0) / dm0);
+
+  var s = streak();
+  var sb = document.getElementById("streak-box");
+  if(s > 0) { sb.style.display="flex"; document.getElementById("streak-val").textContent=s+" jour"+(s>1?"s":""); }
+  else sb.style.display = "none";
+
+  var main = period==="day"?todayPct:period==="week"?weekAvg:monthAvg;
+  var sec  = period==="day"?weekAvg:period==="week"?monthAvg:todayPct;
+  var ml   = period==="day"?"Aujourd'hui":period==="week"?"Moy. semaine":"Moy. mois";
+  var sl   = period==="day"?"Semaine":period==="week"?"Mois":"Aujourd'hui";
+
+  document.getElementById("c1l").textContent = ml;
+  document.getElementById("c1v").textContent = main+"%";
+  document.getElementById("c1v").style.color = sc(main);
+  document.getElementById("c2l").textContent = sl;
+  document.getElementById("c2v").textContent = sec+"%";
+  document.getElementById("c2v").style.color = sc(sec);
+
+  document.getElementById("pil-title").textContent = "Piliers - "+(period==="day"?"Aujourd'hui":period==="week"?"Semaine":"Mois");
+  var days = period==="day"?[TK]:period==="week"?w7:mKeys;
+  document.getElementById("pil-bars").innerHTML = Object.keys(CATS).map(function(cat) {
+    var label = CATS[cat].label; var color = CATS[cat].color;
+    var pct = catPctForBar(cat, days);
+    return "<div class=\"bar-row\"><div class=\"bar-lbl\"><span>"+label+"</span><span style=\"color:"+color+";font-weight:700\">"+pct+"%</span></div>"
+      +"<div class=\"bar-bg\"><div class=\"bar-fill\" style=\"width:"+Math.min(pct,100)+"%;background:"+color+"\"></div></div></div>";
+  }).join("");
+
+  renderChart(w7.map(function(dk) { return score(dk).pct; }).reverse());
+  renderHabits();
+  document.getElementById("inp-note").value = S.notes[TK] || "";
+  document.getElementById("inp-name").value = S.athlete  || "";
+}
+
+function renderChart(pts) {
+  var W=280, H=70, p=8, xs=(W-p*2)/6;
+  var coords = pts.map(function(v,i) {
+    var d = new Date(TODAY); d.setDate(TODAY.getDate()-(6-i));
+    var res = score(shiftKey(6-i));
+    return {x:p+i*xs, y:H-p-((v/105)*(H-p*2)), v:v, isRest:res.isRest, lbl:d.toLocaleDateString("fr-FR",{weekday:"short"}).slice(0,1).toUpperCase()};
+  });
+  var line = coords.map(function(c,i) { return (i===0?"M":"L")+c.x+","+c.y; }).join(" ");
+  var area = line+" L"+coords[coords.length-1].x+","+H+" L"+coords[0].x+","+H+" Z";
+  var svg = "";
+  [0,50,100].forEach(function(v) {
+    var y = H-p-((v/105)*(H-p*2));
+    svg += "<line x1=\""+p+"\" x2=\""+(W-p)+"\" y1=\""+y+"\" y2=\""+y+"\" stroke=\"#1a1a1a\" stroke-width=\"1\"/>";
+  });
+  svg += "<path d=\""+area+"\" fill=\"rgba(232,150,10,0.07)\"/>";
+  svg += "<path d=\""+line+"\" fill=\"none\" stroke=\"#e8960a\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/>";
+  coords.forEach(function(c) {
+    svg += "<circle cx=\""+c.x+"\" cy=\""+c.y+"\" r=\"3.5\" fill=\""+col(c.v,c.isRest)+"\" stroke=\"#0a0a0a\" stroke-width=\"1.5\"/>";
+    svg += "<text x=\""+c.x+"\" y=\""+(H+8)+"\" text-anchor=\"middle\" font-size=\"8\" fill=\"#555\">"+c.lbl+"</text>";
+  });
+  document.getElementById("chart-svg").innerHTML = svg;
+}
+
+function renderHabits() {
+  var isRest = !!S.checks["rest_"+TK];
+  var html = "";
+
+  Object.keys(CATS).forEach(function(cat) {
+    var label   = CATS[cat].label;
+    var color   = CATS[cat].color;
+    var isTrain = (cat === "train");
+
+    html += "<div class=\"cat-hd\"><div class=\"cat-bar\" style=\"background:"+color+"\"></div>"
+          + "<span style=\"font-size:9px;color:"+color+";font-weight:700;letter-spacing:2px;text-transform:uppercase\">"+label+"</span></div>";
+
+    if(isTrain) {
+      var rc  = !!S.checks["rest_"+TK];
+      var sc2 = !!S.checks["stretch_"+TK];
+      var wb  = !!S.checks["wellbeing_"+TK];
+      var ts  = trainScore(TK);
+
+      // Indicateur de score entrainement en mode repos
+      if(rc) {
+        var restLabel = ts === 0 ? "Repos — 0% train" : ts === 50 ? "Repos + 1 bonus — 50% train" : "Repos + 2 bonus — 100% train";
+        var restColor = ts === 0 ? "#3b82f6" : ts === 50 ? "#eab308" : "#22c55e";
+        html += "<div style=\"font-size:10px;color:"+restColor+";font-weight:700;padding:6px 14px;margin-bottom:6px;background:"+restColor+"15;border-radius:8px;border:1px solid "+restColor+"33\">"+restLabel+"</div>";
+      }
+
+      // Case repos toujours en premier
+      html += hrowHTML("rest_"+TK, "&#128716;", "Jour de repos (seance non prevue)", "#3b82f6", rc, false);
+
+      if(rc) {
+        // Bonus repos indentes
+        html += "<div class=\"bonus-indent\">";
+        html += hrowHTML("stretch_"+TK,   "&#129510;", "Etirements / recuperation douce", "#a78bfa", sc2, true);
+        html += hrowHTML("wellbeing_"+TK, "&#129505;", "Bien-etre (meditation, marche...)", "#34d399", wb, true);
+        html += "</div>";
+      } else {
+        // Cases normales entrainement
+        HABITS.filter(function(h) { return h.cat === "train"; }).forEach(function(h) {
+          var ck = !!S.checks[h.id+"_"+TK];
+          html += hrowHTML(h.id+"_"+TK, h.icon, h.label, color, ck, h.id === "satisfied");
+        });
+      }
+    } else {
+      HABITS.filter(function(h) { return h.cat === cat; }).forEach(function(h) {
+        var ck = !!S.checks[h.id+"_"+TK];
+        html += hrowHTML(h.id+"_"+TK, h.icon, h.label, color, ck, h.id === "satisfied");
+      });
+    }
+  });
+
+  document.getElementById("habits-wrap").innerHTML = html;
+  document.querySelectorAll(".hrow").forEach(function(el) {
+    el.addEventListener("click", function() {
+      S.checks[el.dataset.k] = !S.checks[el.dataset.k];
+      if(el.dataset.k === "rest_"+TK && !S.checks[el.dataset.k]) {
+        S.checks["stretch_"+TK]   = false;
+        S.checks["wellbeing_"+TK] = false;
+      }
+      save(); render();
+    });
+  });
+}
+
+function hrowHTML(k, icon, label, color, checked, isBonus) {
+  var bg       = checked ? "background:"+color+"18;border-color:"+color+"55" : "";
+  var chkStyle = checked ? "border-color:"+color+";background:"+color : "border-color:#2a2a2a";
+  var lblColor = checked ? "#fff" : "#888";
+  return "<div class=\"hrow\" data-k=\""+k+"\" style=\""+bg+"\">"
+    +"<div class=\"hrow-chk\" style=\""+chkStyle+"\">"+(checked?"<span style=\"color:#000;font-size:12px;font-weight:900\">&#10003;</span>":"")+"</div>"
+    +"<span style=\"font-size:15px\">"+icon+"</span>"
+    +"<span style=\"font-size:13px;color:"+lblColor+";flex:1\">"+label+"</span>"
+    +(isBonus?"<span class=\"bonus\">BONUS</span>":"")
+    +"</div>";
+}
+
+function renderMonth() {
+  var dm  = dim(calY, calM);
+  var fd  = new Date(calY, calM, 1).getDay();
+  var off = fd === 0 ? 6 : fd-1;
+  document.getElementById("month-name").textContent = new Date(calY,calM,1).toLocaleDateString("fr-FR",{month:"long",year:"numeric"});
+  var days = Array.from({length:dm}, function(_,i) {
+    var d  = new Date(calY, calM, i+1);
+    var dk = calY+"-"+pad(calM+1)+"-"+pad(i+1);
+    var future = d > TODAY;
+    var res = score(dk);
+    return {day:i+1, dk:dk, pct:res.pct, isRest:res.isRest, future:future, isToday:dk===TK};
+  });
+  var filled = days.filter(function(d) { return !d.future; });
+  var avg = filled.length ? Math.round(filled.reduce(function(a,d) { return a+d.pct; }, 0) / filled.length) : 0;
+  document.getElementById("m-ok").textContent   = filled.filter(function(d) { return d.pct >= 100; }).length;
+  document.getElementById("m-part").textContent = filled.filter(function(d) { return d.pct > 0 && d.pct < 100; }).length;
+  document.getElementById("m-avg").textContent  = avg+"%";
+  document.getElementById("cal-hds").innerHTML = ["L","M","M","J","V","S","D"].map(function(d) {
+    return "<div class=\"cal-lbl\">"+d+"</div>";
+  }).join("");
+  var html = Array.from({length:off}).map(function() { return "<div></div>"; }).join("");
+  days.forEach(function(item) {
+    var day=item.day, dk=item.dk, pct=item.pct, isRest=item.isRest, future=item.future, isToday=item.isToday;
+    var c = future ? "#2a2a2a" : col(pct, isRest);
+    var hasNote = S.notes && S.notes[dk];
+    var tap = !future && (pct > 0 || isRest);
+    html += "<div class=\"cal-day"+(tap?" tap":"")+"\" style=\"background:"+(future?"transparent":isRest&&pct===0?"#3b82f620":c+"22")+";border-color:"+(isToday?"#e8960a":future?"#1e1e1e":isRest&&pct===0?"#3b82f655":pct===0?"#1e1e1e":c)+"\" "
+          + (tap ? "onclick=\"openModal('"+dk+"')\"" : "") + ">"
+          + "<span style=\"font-size:10px;font-weight:"+(isToday?900:500)+";color:"+(future?"#2a2a2a":isToday?"#e8960a":"#fff")+"\">"+day+"</span>"
+          + (!future&&pct>0 ? "<span style=\"font-size:7px;color:"+c+";font-weight:700;line-height:1\">"+pct+"%</span>" : "")
+          + (isRest&&!future ? "<span style=\"font-size:8px\">&#128716;</span>" : "")
+          + (hasNote&&!future ? "<div style=\"position:absolute;bottom:2px;right:3px;width:4px;height:4px;border-radius:50%;background:#e8960a\"></div>" : "")
+          + "</div>";
+  });
+  document.getElementById("cal-grid").innerHTML = html;
+  document.getElementById("cal-legend").innerHTML = [
+    {c:"#22c55e",l:"100%"},{c:"#e8960a",l:"70-99%"},{c:"#eab308",l:"40-69%"},{c:"#ef4444",l:"<40%"},{c:"#3b82f6",l:"Repos"}
+  ].map(function(x) {
+    return "<div class=\"leg-item\"><div class=\"leg-dot\" style=\"background:"+x.c+"\"></div>"+x.l+"</div>";
+  }).join("");
+}
+
+function openModal(dk) {
+  var res = score(dk); var pct = res.pct; var isRest = res.isRest;
+  var c = col(pct, isRest);
+  var d = new Date(dk);
+  document.getElementById("m-date").textContent  = d.toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  document.getElementById("m-score").textContent = pct+"%";
+  document.getElementById("m-score").style.color = c;
+  var restTxt = "";
+  if(isRest) {
+    var ts = trainScore(dk);
+    restTxt = "&#128716; Repos";
+    if(S.checks["stretch_"+dk])   restTxt += " · &#129510; Etirements";
+    if(S.checks["wellbeing_"+dk]) restTxt += " · &#129505; Bien-etre";
+    restTxt += " (" + ts + "% train)";
+  }
+  document.getElementById("m-rest").innerHTML = restTxt;
+  var note = S.notes && S.notes[dk];
+  var nb = document.getElementById("m-note-box");
+  if(note) { nb.style.display="block"; document.getElementById("m-note-txt").textContent=note; }
+  else nb.style.display = "none";
+  var html = "";
+  Object.keys(CATS).forEach(function(cat) {
+    var label = CATS[cat].label; var color = CATS[cat].color;
+    var hh   = HABITS.filter(function(h) { return h.cat === cat; });
+    var done = hh.filter(function(h) { return !!S.checks[h.id+"_"+dk]; });
+    var miss = hh.filter(function(h) { return !S.checks[h.id+"_"+dk]; });
+    html += "<div style=\"margin-bottom:16px\">"
+          + "<div style=\"font-size:9px;color:"+color+";font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px\">"
+          + "<div style=\"width:3px;height:12px;background:"+color+";border-radius:2px\"></div>"
+          + label+" - "+done.length+"/"+hh.length+"</div>";
+    done.forEach(function(h) {
+      html += "<div style=\"display:flex;align-items:center;gap:10px;padding:9px 12px;margin-bottom:4px;background:"+color+"15;border-radius:8px;border:1px solid "+color+"33\">"
+            + "<span style=\"color:#22c55e;font-size:13px;font-weight:900\">&#10003;</span>"
+            + "<span style=\"font-size:12px\">"+h.icon+"</span>"
+            + "<span style=\"font-size:12px;color:#fff\">"+h.label+"</span></div>";
+    });
+    miss.forEach(function(h) {
+      html += "<div style=\"display:flex;align-items:center;gap:10px;padding:9px 12px;margin-bottom:4px;background:transparent;border-radius:8px;border:1px solid #1e1e1e\">"
+            + "<span style=\"color:#2a2a2a;font-size:13px;font-weight:900\">&#10007;</span>"
+            + "<span style=\"font-size:12px;opacity:0.4\">"+h.icon+"</span>"
+            + "<span style=\"font-size:12px;color:#555\">"+h.label+"</span></div>";
+    });
+    html += "</div>";
+  });
+  document.getElementById("m-habits").innerHTML = html;
+  document.getElementById("modal").classList.add("open");
+}
+
+// --- SYNC ---
+function syncSheet(manual) {
+  if(!S.athlete || S.athlete.trim() === "") {
+    if(manual) showSync("err","Entrez d'abord votre prenom !");
+    return;
+  }
+  showSync("pend", manual ? "&#9889; Envoi en cours..." : "Sync...");
+  fetch(SCRIPT_URL, {
+    method:"POST", mode:"no-cors",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({
+      athlete: S.athlete,
+      date: TK,
+      checks: S.checks,
+      note: S.notes[TK] || "",
+      score: score(TK).pct
+    })
+  }).then(function() {
+    showSync("ok", manual ? "&#10003; Journee enregistree !" : "Synchronise &#10003;");
+  }).catch(function() {
+    showSync("err","Erreur — verifie ta connexion");
+  });
+}
+
+function showSync(type, msg) {
+  var el = document.getElementById("sync-el");
+  el.style.display = "block"; el.className = "sync "+type; el.innerHTML = msg;
+  if(type === "ok") setTimeout(function() { el.style.display="none"; }, 4000);
+}
+
+// --- EVENTS ---
+document.getElementById("inp-name").addEventListener("input", function(e) { S.athlete=e.target.value; save(); });
+document.getElementById("inp-note").addEventListener("input", function(e) { S.notes[TK]=e.target.value; save(); });
+
+// Bouton enregistrement rapide
+document.getElementById("btn-sync-now").addEventListener("click", function() {
+  save(); syncSheet(true);
+});
+
+document.getElementById("btn-month").addEventListener("click", function() {
+  document.getElementById("pg-main").classList.remove("active");
+  document.getElementById("pg-month").classList.add("active");
+  renderMonth();
+});
+document.getElementById("btn-back").addEventListener("click", function() {
+  document.getElementById("pg-month").classList.remove("active");
+  document.getElementById("pg-main").classList.add("active");
+});
+document.getElementById("btn-prev").addEventListener("click", function() { calM--; if(calM<0){calM=11;calY--;} renderMonth(); });
+document.getElementById("btn-next").addEventListener("click", function() { calM++; if(calM>11){calM=0;calY++;} renderMonth(); });
+document.getElementById("modal-close").addEventListener("click", function() { document.getElementById("modal").classList.remove("open"); });
+document.getElementById("modal").addEventListener("click", function(e) {
+  if(e.target===document.getElementById("modal")) document.getElementById("modal").classList.remove("open");
+});
+document.querySelectorAll(".tab").forEach(function(t) {
+  t.addEventListener("click", function() {
+    document.querySelectorAll(".tab").forEach(function(x) { x.classList.remove("on"); });
+    t.classList.add("on"); period = t.dataset.p; render();
+  });
+});
+
+render();
+</script>
+</body>
+</html>
